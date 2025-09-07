@@ -1,7 +1,10 @@
 import Footer from "../components/Footer";
 import { Header } from "../components/Header";
+import { useNavigate } from "react-router-dom"; // Add this import
 
 function Welcome() {
+  const navigate = useNavigate(); // Add this line
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9fa]">
       <Header />

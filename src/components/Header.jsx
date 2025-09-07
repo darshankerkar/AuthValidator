@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom"; // Add this import
 
 export const Header = () => {
+  const navigate = useNavigate(); // Add this line
+
   return (
     <header
       style={{
@@ -53,7 +56,18 @@ export const Header = () => {
         <a href="#" style={navLinkStyle}>
           Admin Dashboard
         </a>
-        <button style={logoutBtnStyle}>Log Out</button>
+        <button
+          style={{ ...logoutBtnStyle, marginLeft: 40, paddingLeft: 26 }} // Added left padding to Log In
+          className="login ml-[20px]"
+          onClick={() => navigate("/login")} // Navigate to /login on click
+        >
+          Log In
+        </button>
+        <button
+          style={{ ...logoutBtnStyle, marginLeft: 0 }} // Removed margin left from Sign Up
+        >
+          Sign Up
+        </button>
       </nav>
     </header>
   );
