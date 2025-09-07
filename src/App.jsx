@@ -7,7 +7,7 @@ function App() {
   return (
     <>
         <Routes>
-          <Route path='/AuthValidator' element={<Welcome />} />
+          <Route path='/' element={<Welcome />} />
         </Routes>
     </>
   );
