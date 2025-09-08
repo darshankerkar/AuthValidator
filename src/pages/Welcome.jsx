@@ -60,60 +60,101 @@ function Welcome() {
             cursor: "pointer",
             boxShadow: "0 2px 8px rgba(44,204,113,0.08)",
             transition: "background 0.2s",
-            marginLeft:550,
+            marginLeft:450,
+
           }}
         >
           Verify Your Certificate Now
         </button>
       </section>
 
-      {/* Trusted Section */}
-      <section className="py-14 px-4">
-        <h2
+<section className="py-14 px-4">
+  <h2
+    style={{
+      textAlign: "center",
+      fontSize: 36,
+      fontWeight: 700,
+      marginBottom: 40,
+      fontFamily: "serif",
+      color: "#222",
+    }}
+  >
+    Trusted Across India
+  </h2>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      gap: 32,
+      flexWrap: "wrap",
+    }}
+  >
+    {/* Data array with each card's stats */}
+    {[
+      {
+        title: "Certificates Verified",
+        values: [5], // can add multiple values if needed
+      },
+      {
+        title: "Successful Verifications",
+        values: [0],
+      },
+      {
+        title: "Forgery Attempts Detected",
+        values: [0],
+      },
+      {
+        title: "Institutions Onboarded",
+        values: [2],
+      },
+    ].map(({ title, values }, idx) => (
+      <div
+        key={idx}
+        style={{
+          background: "#27c99a",
+          color: "#fff",
+          borderRadius: 16,
+          width: 260,
+          minHeight: 140,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+           boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          padding: 20,
+          gap: 10,
+        }}
+      >
+        {values.map((val, i) => (
+          <span
+            key={i}
+            style={{
+              fontSize: 48,
+              fontWeight: 700,
+              display: "block",
+              lineHeight: 1,
+            }}
+          >
+            {val}
+          </span>
+        ))}
+        <span
           style={{
+            fontSize: 20,
+            fontWeight: 500,
+            marginTop: 6,
             textAlign: "center",
-            fontSize: 36,
-            fontWeight: 700,
-            marginBottom: 40,
-            fontFamily: "serif",
-            color: "#222",
           }}
         >
-          Trusted Across India
-        </h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 32,
-            flexWrap: "wrap",
-          }}
-        >
-          {[1, 2, 3, 4].map((_, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: "#27c99a",
-                color: "#fff",
-                borderRadius: 16,
-                width: 260,
-                minHeight: 140,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 2px 12px rgba(39,201,154,0.08)",
-                marginBottom: 16,
-              }}
-            >
-              <span style={{ fontSize: 48, fontWeight: 700 }}>5</span>
-              <span style={{ fontSize: 20, fontWeight: 500 }}>
-                Certificates Verified
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
+          {title}
+        </span>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* Why Choose AuthValidator Section */}
       <section style={{ background: "#fff", padding: "64px 0 32px 0" }}>
@@ -151,7 +192,9 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+               boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <div style={{ fontSize: 32, color: "#1976d2", marginBottom: 12 }}>
@@ -176,7 +219,9 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+               boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <div style={{ fontSize: 32, color: "#1976d2", marginBottom: 12 }}>
@@ -201,7 +246,9 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+               boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <div style={{ fontSize: 32, color: "#1976d2", marginBottom: 12 }}>
@@ -253,7 +300,9 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+               boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <div style={{
@@ -288,7 +337,9 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+              boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
             }}
           >
             <div style={{
@@ -323,7 +374,10 @@ function Welcome() {
               flexDirection: "column",
               alignItems: "center",
               padding: "32px 24px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+               boxShadow:
+            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          
             }}
           >
             <div style={{
