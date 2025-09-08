@@ -3,66 +3,76 @@ import { Header } from "../components/Header";
 import { useNavigate } from "react-router-dom"; // Add this import
 
 function Welcome() {
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f8f9fa]">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)" }}>
       <Header />
 
       {/* Hero Section */}
       <section
-        className="w-full flex flex-col items-center justify-center text-center"
         style={{
-          background: "linear-gradient(180deg, #2196f3 0%, #1e88e5 100%)",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          background: "linear-gradient(120deg, #1976d2 0%, #21c6f3 100%)",
           color: "#fff",
-          padding: "64px 16px 80px 16px",
-          borderBottomLeftRadius: 16,
-          borderBottomRightRadius: 16,
+          padding: "72px 16px 90px 16px",
+          borderBottomLeftRadius: 32,
+          borderBottomRightRadius: 32,
+          boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
         }}
       >
-        <div className="content1" style={{display:"flex",paddingLeft:"330px"}}>
-        <h1
-          style={{
-            fontSize: 48,
-            fontWeight: 700,
-            margin :0,
-            fontFamily: "serif",
-          }}
-        >
-          Secure Certificate Verification for India
-        </h1>
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <h1
+            style={{
+              fontSize: 54,
+              fontWeight: 800,
+              margin: 0,
+              fontFamily: "serif",
+              letterSpacing: 1,
+              textShadow: "0 2px 16px #1976d2, 0 1px 0 #fff",
+              maxWidth: 900,
+            }}
+          >
+            Secure Certificate Verification for India
+          </h1>
         </div>
-        
         <p
           style={{
-            fontSize: 25,
+            fontSize: 26,
             maxWidth: 700,
-            margin: "0 auto 32px auto",
+            margin: "0 auto 36px auto",
             fontWeight: 400,
-            lineHeight: 1.4,
-            paddingTop: 30,
-            paddingLeft: 30,
+            lineHeight: 1.5,
+            paddingTop: 32,
+            paddingLeft: 0,
+            textShadow: "0 1px 8px #1976d2, 0 1px 0 #fff",
           }}
         >
-          AuthValidator uses advanced AI and blockchain technology to instantly
-          verify academic certificates, preventing fraud and ensuring institutional
-          trust across Indian educational institutions.
+          AuthValidator uses advanced AI and blockchain technology to instantly verify academic certificates, preventing fraud and ensuring institutional trust across Indian educational institutions.
         </p>
         <button
           style={{
-            background: "#2ecc71",
+            background: "linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)",
             color: "#fff",
-            fontWeight: 600,
-            fontSize: 24,
-            padding: "18px 48px",
-            borderRadius: 10,
+            fontWeight: 700,
+            fontSize: 26,
+            padding: "18px 54px",
+            borderRadius: 14,
             border: "none",
             cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(44,204,113,0.08)",
-            transition: "background 0.2s",
-            marginLeft:450,
-
+            boxShadow: "0 2px 12px rgba(44,204,113,0.13)",
+            transition: "background 0.2s, box-shadow 0.2s",
+            marginTop: 18,
+            marginBottom: 0,
+            letterSpacing: 1,
           }}
+          onMouseOver={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #27c99a 0%, #2ecc71 100%)')}
+          onMouseOut={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)')}
         >
           Verify Your Certificate Now
         </button>
