@@ -1,22 +1,35 @@
 import React, { useState } from "react";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { Header } from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [googleError, setGoogleError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const handleGoogleLogin = async () => {
     setGoogleError("");
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // Redirect or show success as needed
+      navigate("/welcome");
     } catch (error) {
       setGoogleError(error.message);
+    }
+  };
+
+  const handleEmailLogin = async () => {
+    setLoginError("");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/welcome");
+    } catch (error) {
+      setLoginError(error.message);
     }
   };
 
@@ -124,6 +137,7 @@ export default function Login() {
             <div style={{ color: "red", marginBottom: 12, fontSize: 15 }}>{googleError}</div>
           )}
           <button
+            onClick={handleEmailLogin}
             style={{
               width: "140px",
               background: "#ff6a00",
@@ -142,6 +156,9 @@ export default function Login() {
           >
             Login
           </button>
+          {loginError && (
+            <div style={{ color: "red", marginTop: 12, fontSize: 15 }}>{loginError}</div>
+          )}
         </div>
       </div>
       <Footer />
