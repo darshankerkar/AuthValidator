@@ -2,8 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-// import Login from '../pages/Login';
 import Dashboard from './pages/Dashboard';
+import VerifyCertificate from './pages/VerifyCertificate';
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/admin-dashboard" element={<Dashboard />} />
+      <Route path="/verify-certificate" element={<VerifyCertificate />} />
     </Routes>
   );
 }

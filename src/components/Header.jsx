@@ -81,7 +81,12 @@ export const Header = () => {
         <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
           Home
         </a>
-        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
+        <a
+          style={navLinkStyle}
+          onClick={() => navigate("/verify-certificate")}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
+        >
           Verify Certificate
         </a>
         <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
