@@ -73,6 +73,7 @@ function Welcome() {
           }}
           onMouseOver={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #27c99a 0%, #2ecc71 100%)')}
           onMouseOut={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)')}
+          onClick={() => navigate('/verify-certificate')}
         >
           Verify Your Certificate Now
         </button>
