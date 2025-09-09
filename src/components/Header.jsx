@@ -66,7 +66,7 @@ export const Header = () => {
           style={{
             color: "#1976d2",
             fontWeight: 800,
-            fontSize: 24,
+              fontSize: 24,
             fontFamily: "serif",
             letterSpacing: 1,
             textShadow: "0 2px 8px #e3f0ff",
@@ -78,7 +78,12 @@ export const Header = () => {
 
       {/* Navigation */}
       <nav style={{ display: "flex", alignItems: "center", gap: 40 }}>
-        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
+        <a
+          style={navLinkStyle}
+          onClick={() => navigate("/")}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
+        >
           Home
         </a>
         <a
