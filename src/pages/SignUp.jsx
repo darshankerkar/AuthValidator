@@ -28,8 +28,8 @@ export default function SignUp() {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      setSuccess("Account created successfully! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 1500);
+      setSuccess("Account created successfully! Redirecting...");
+      setTimeout(() => navigate("/"), 1500); // Redirect to Welcome page
     } catch (err) {
       setError(err.message);
     }

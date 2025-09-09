@@ -10,10 +10,9 @@ function App() {
     <Routes>
       <Route path='/' element={<Welcome />} />
       <Route path='/login' element={<Login />} />
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/admin-dashboard" element={<Dashboard />} />
-      <Route path="/verify-certificate" element={<VerifyCertificate />} />
+      <Route path='/signup' element={<SignUp />} />
+      <Route path='/verify-certificate' element={<VerifyCertificate />} />
+      <Route path='/admin-dashboard' element={<Dashboard />} />
     </Routes>
   );
 }
