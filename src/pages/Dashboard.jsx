@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaCertificate, FaCheckCircle, FaExclamationCircle, FaUniversity, FaEye } from "react-icons/fa";
+import { Header  } from "../components/Header";
 
 const statsCardsData = [
   { id: 1, value: 5, label: "Certificates Verified", color: "#27c99a", icon: <FaCertificate /> },
@@ -54,9 +55,11 @@ const Dashboard = () => {
     filterResult === "All Results"
       ? verificationLogsData
       : verificationLogsData.filter((log) => log.result === filterResult);
-
-  return (
-    <div style={{ padding: 24, fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
+      
+      
+        return (
+    <div style={{  minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <Header />
         <h1 textAlign="centre">Admin Dashboard</h1>
         <p>Monitor system-wide certificate verification activities and manage institutional partnerships across India</p>
       
