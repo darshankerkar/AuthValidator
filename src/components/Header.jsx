@@ -66,7 +66,7 @@ export const Header = () => {
           style={{
             color: "#1976d2",
             fontWeight: 800,
-            fontSize: 32,
+            fontSize: 24,
             fontFamily: "serif",
             letterSpacing: 1,
             textShadow: "0 2px 8px #e3f0ff",
@@ -87,9 +87,15 @@ export const Header = () => {
         <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
           Institution Portal
         </a>
-        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
-          Admin Dashboard
-        </a>
+<a
+  style={navLinkStyle}
+  onClick={() => navigate("/admin-dashboard")} // 👈 must match App.jsx
+  onMouseOver={(e) => (e.currentTarget.style.color = "#1976d2")}
+  onMouseOut={(e) => (e.currentTarget.style.color = "#222")}
+>
+  Admin Dashboard
+</a>
+
         {user ? (
           <div style={{ position: "relative", marginLeft: 40 }} ref={userBtnRef}>
             <button
