@@ -44,10 +44,10 @@ export const Header = () => {
 
       {/* Navigation */}
       <nav style={{ display: "flex", alignItems: "center", gap: 36 }}>
-        <a href="#" style={navLinkStyle}>
+        <a href="/AuthValidator/" style={navLinkStyle}>
           Home
         </a>
-        <a href="#" style={navLinkStyle}>
+        <a href="/AuthValidator/verify" style={navLinkStyle}>
           Verify Certificate
         </a>
         <a href="#" style={navLinkStyle}>
@@ -59,7 +59,7 @@ export const Header = () => {
         <button
           style={{ ...logoutBtnStyle, marginLeft: 40, paddingLeft: 26 }} // Added left padding to Log In
           className="login ml-[20px]"
-          onClick={() => navigate("/login")} // Navigate to /login on click
+          onClick={() => navigate("/AuthValidator/login")} // Navigate to /login on click
         >
           Log In
         </button>
