@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { FaHome, FaCheckCircle, FaUniversity, FaTachometerAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase/config";
 
@@ -32,44 +33,49 @@ export const Header = () => {
   return (
     <header
       style={{
-        background: "linear-gradient(90deg, #e3f0ff 0%, #fafdff 100%)",
-        padding: "18px 40px 18px 40px",
+        background: "rgba(255,255,255,0.85)",
+        backgroundImage: "linear-gradient(90deg, #e3f0ff 0%, #fafdff 100%)",
+        padding: "26px 64px 26px 64px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         boxSizing: "border-box",
-        boxShadow: "0 4px 24px 0 rgba(80,120,200,0.10)",
+        boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
         borderBottom: "1.5px solid #e3e8f0",
-        backdropFilter: "blur(8px)",
+        backdropFilter: "blur(14px)",
         position: "sticky",
         top: 0,
         zIndex: 100,
+        transition: "background 0.2s, box-shadow 0.2s",
+        minHeight: 90,
       }}
     >
       {/* Logo and Title */}
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 320 }}>
         <img
           src="AuthValidator_Logo.png"
           alt="AuthValidator Logo"
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 12,
+            width: 60,
+            height: 60,
+            borderRadius: 16,
             background: "#fff",
-            boxShadow: "0 2px 12px rgba(25,118,210,0.10)",
-            marginRight: 16,
+            boxShadow: "0 6px 20px rgba(25,118,210,0.13)",
+            marginRight: 0,
             objectFit: "contain",
-            border: "2px solid #e3e8f0",
+            border: "2.5px solid #e3e8f0",
           }}
         />
         <span
           style={{
             color: "#1976d2",
-            fontWeight: 800,
-              fontSize: 24,
+            fontWeight: 900,
+            fontSize: 22,
             fontFamily: "serif",
-            letterSpacing: 1,
-            textShadow: "0 2px 8px #e3f0ff",
+            letterSpacing: 1.2,
+            textShadow: "0 2px 16px #e3f0ff",
+            textTransform: "uppercase",
+            paddingLeft: 2,
           }}
         >
           AuthValidator
@@ -77,79 +83,80 @@ export const Header = () => {
       </div>
 
       {/* Navigation */}
-      <nav style={{ display: "flex", alignItems: "center", gap: 40 }}>
+  <nav style={{ display: "flex", alignItems: "center", gap: 28, marginLeft: 32, flex: 1, justifyContent: "center" }}>
         <a
-          style={navLinkStyle}
+          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => navigate("/")}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
+          onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
+          onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
         >
-          Home
+          <FaHome style={{ fontSize: 22, marginBottom: -2 }} /> Home
         </a>
         <a
-          style={navLinkStyle}
+          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => navigate("/verify-certificate")}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
+          onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
+          onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
         >
-          Verify Certificate
+          <FaCheckCircle style={{ fontSize: 22, marginBottom: -2 }} /> Verify Certificate
         </a>
-        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
-          Institution Portal
+        <a href="#" style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }} onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }} onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}>
+          <FaUniversity style={{ fontSize: 22, marginBottom: -2 }} /> Institution Portal
         </a>
 <a
-  style={navLinkStyle}
-  onClick={() => navigate("/admin-dashboard")} // 👈 must match App.jsx
-  onMouseOver={(e) => (e.currentTarget.style.color = "#1976d2")}
-  onMouseOut={(e) => (e.currentTarget.style.color = "#222")}
+  style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
+  onClick={() => navigate("/admin-dashboard")}
+  onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
+  onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
 >
-  Admin Dashboard
+  <FaTachometerAlt style={{ fontSize: 22, marginBottom: -2 }} /> Admin Dashboard
 </a>
 
         {user ? (
-          <div style={{ position: "relative", marginLeft: 40 }} ref={userBtnRef}>
+          <div style={{ position: "relative", marginLeft: 56 }} ref={userBtnRef}>
             <button
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
-                fontWeight: 700,
-                fontSize: 20,
+                gap: 18,
+                fontWeight: 900,
+                fontSize: 22,
                 color: "#1976d2",
                 background: "linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)",
                 borderRadius: 999,
-                padding: "10px 28px 10px 18px",
-                boxShadow: "0 2px 12px rgba(25,118,210,0.10)",
-                letterSpacing: 1,
-                border: "2px solid #b6c6e3",
+                padding: "14px 38px 14px 24px",
+                boxShadow: "0 6px 20px rgba(25,118,210,0.13)",
+                letterSpacing: 1.5,
+                border: "2.5px solid #b6c6e3",
                 cursor: "pointer",
                 transition: "background 0.2s, box-shadow 0.2s, border 0.2s",
                 outline: showLogout ? "2px solid #1976d2" : "none",
+                minWidth: 220,
               }}
               onClick={() => setShowLogout((v) => !v)}
               onMouseOver={e => {
                 e.currentTarget.style.background = 'linear-gradient(90deg, #cbe5ff 0%, #e3f0ff 100%)';
-                e.currentTarget.style.border = '2px solid #1976d2';
+                e.currentTarget.style.border = '2.5px solid #1976d2';
               }}
               onMouseOut={e => {
                 e.currentTarget.style.background = 'linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)';
-                e.currentTarget.style.border = '2px solid #b6c6e3';
+                e.currentTarget.style.border = '2.5px solid #b6c6e3';
               }}
             >
               <span style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 32,
-                height: 32,
+                width: 44,
+                height: 44,
                 borderRadius: "50%",
-                background: "#1976d2",
+                background: "linear-gradient(135deg, #1976d2 0%, #21c6f3 100%)",
                 color: "#fff",
-                fontWeight: 800,
-                fontSize: 18,
-                boxShadow: "0 1px 4px rgba(25,118,210,0.10)",
+                fontWeight: 900,
+                fontSize: 24,
+                boxShadow: "0 2px 12px rgba(25,118,210,0.13)",
               }}>
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="10" cy="7" r="4" fill="#fff" fillOpacity=".7"/>
                   <ellipse cx="10" cy="15.5" rx="6.5" ry="3.5" fill="#fff" fillOpacity=".4"/>
                 </svg>
@@ -198,17 +205,17 @@ export const Header = () => {
         ) : (
           <>
             <button
-              style={{ ...loginBtnStyle, marginLeft: 40 }}
+              style={{ ...loginBtnStyle, marginLeft: 40, display: "flex", alignItems: "center", gap: 8 }}
               className="login ml-[20px]"
               onClick={() => navigate("/login")}
             >
-              Log In
+              <FaSignInAlt style={{ fontSize: 22, marginBottom: -2 }} /> Log In
             </button>
             <button
-              style={{ ...signupBtnStyle, marginLeft: 0 }}
+              style={{ ...signupBtnStyle, marginLeft: 0, display: "flex", alignItems: "center", gap: 8 }}
               onClick={() => navigate("/signup")}
             >
-              Sign Up
+              <FaUserPlus style={{ fontSize: 22, marginBottom: -2 }} /> Sign Up
             </button>
           </>
         )}
