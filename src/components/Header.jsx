@@ -42,12 +42,10 @@ export const Header = () => {
         boxSizing: "border-box",
         boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
         borderBottom: "1.5px solid #e3e8f0",
-        backdropFilter: "blur(14px)",
+        backdropFilter: "blur(8px)",
         position: "sticky",
         top: 0,
         zIndex: 100,
-        transition: "background 0.2s, box-shadow 0.2s",
-        minHeight: 90,
       }}
     >
       {/* Logo and Title */}
@@ -60,8 +58,8 @@ export const Header = () => {
             height: 60,
             borderRadius: 16,
             background: "#fff",
-            boxShadow: "0 6px 20px rgba(25,118,210,0.13)",
-            marginRight: 0,
+            boxShadow: "0 2px 12px rgba(25,118,210,0.10)",
+            marginRight: 16,
             objectFit: "contain",
             border: "2.5px solid #e3e8f0",
           }}
@@ -69,13 +67,11 @@ export const Header = () => {
         <span
           style={{
             color: "#1976d2",
-            fontWeight: 900,
-            fontSize: 22,
+            fontWeight: 800,
+              fontSize: 24,
             fontFamily: "serif",
-            letterSpacing: 1.2,
-            textShadow: "0 2px 16px #e3f0ff",
-            textTransform: "uppercase",
-            paddingLeft: 2,
+            letterSpacing: 1,
+            textShadow: "0 2px 8px #e3f0ff",
           }}
         >
           AuthValidator
@@ -83,31 +79,31 @@ export const Header = () => {
       </div>
 
       {/* Navigation */}
-  <nav style={{ display: "flex", alignItems: "center", gap: 28, marginLeft: 32, flex: 1, justifyContent: "center" }}>
+      <nav style={{ display: "flex", alignItems: "center", gap: 40 }}>
         <a
           style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => navigate("/")}
-          onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
-          onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
           <FaHome style={{ fontSize: 22, marginBottom: -2 }} /> Home
         </a>
         <a
           style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
           onClick={() => navigate("/verify-certificate")}
-          onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
-          onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
           <FaCheckCircle style={{ fontSize: 22, marginBottom: -2 }} /> Verify Certificate
         </a>
-        <a href="#" style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }} onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }} onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}>
-          <FaUniversity style={{ fontSize: 22, marginBottom: -2 }} /> Institution Portal
+        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
+          Institution Portal
         </a>
 <a
-  style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
-  onClick={() => navigate("/admin-dashboard")}
-  onMouseOver={e => { e.currentTarget.style.color = '#1976d2'; e.currentTarget.style.background = '#e3f0ff'; }}
-  onMouseOut={e => { e.currentTarget.style.color = '#222'; e.currentTarget.style.background = 'none'; }}
+  style={navLinkStyle}
+  onClick={() => navigate("/admin-dashboard")} // 👈 must match App.jsx
+  onMouseOver={(e) => (e.currentTarget.style.color = "#1976d2")}
+  onMouseOut={(e) => (e.currentTarget.style.color = "#222")}
 >
   <FaTachometerAlt style={{ fontSize: 22, marginBottom: -2 }} /> Admin Dashboard
 </a>

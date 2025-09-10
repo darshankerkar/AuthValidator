@@ -12,7 +12,8 @@ function Welcome() {
       {/* Hero Section */}
       <section
         style={{
-          width: "100%",
+          width: "98%",
+          height: "85%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

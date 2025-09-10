@@ -34,7 +34,7 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" , marginTop: 65 }}>
       <Header />
       <div
         style={{
