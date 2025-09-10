@@ -193,9 +193,9 @@ export default function VerifyCertificate() {
                 : message}
             </div>
           )}
-          
         </div>
       </div>
+         <br /><br />
       <Footer />
     </div>
   );
