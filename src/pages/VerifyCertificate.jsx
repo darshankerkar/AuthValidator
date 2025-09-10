@@ -193,23 +193,7 @@ export default function VerifyCertificate() {
                 : message}
             </div>
           )}
-          {/* OCR Result (optional) */}
-          {result && !message.includes("failed") && (
-            <div style={{
-              marginTop: 18,
-              background: "#fafdff",
-              border: "1.5px solid #b6c6e3",
-              borderRadius: 10,
-              padding: "16px 12px",
-              color: "#1976d2",
-              fontWeight: 500,
-              fontSize: 16,
-              textAlign: "left"
-            }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Extracted Text:</div>
-              <div style={{ whiteSpace: "pre-wrap" }}>{result}</div>
-            </div>
-          )}
+          
         </div>
       </div>
       <Footer />
