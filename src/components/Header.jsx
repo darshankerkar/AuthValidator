@@ -96,7 +96,13 @@ export const Header = () => {
         >
           <FaCheckCircle style={{ fontSize: 22, marginBottom: -2 }} /> Verify Certificate
         </a>
-        <a href="#" style={navLinkStyle} onMouseOver={e => e.currentTarget.style.color = '#1976d2'} onMouseOut={e => e.currentTarget.style.color = '#222'}>
+        <a
+          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
+          onClick={() => navigate("/institution-portal")}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
+        >
+          {/* You can add an icon here if desired, e.g., <FaUniversity /> */}
           Institution Portal
         </a>
 <a
