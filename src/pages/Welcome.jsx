@@ -1,9 +1,17 @@
 import Footer from "../components/Footer";
 import { Header } from "../components/Header";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase/config";
 
 function Welcome() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)" }}>
@@ -463,6 +471,13 @@ function Welcome() {
             boxShadow: "0 2px 8px rgba(44,204,113,0.08)",
             transition: "background 0.2s",
             marginTop: 10,
+          }}
+          onClick={() => {
+            if (user) {
+              navigate('/verify-certificate');
+            } else {
+              navigate('/login');
+            }
           }}
         >
           Get Started Today
