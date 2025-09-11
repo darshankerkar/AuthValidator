@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaCheckCircle, FaUniversity, FaTachometerAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase/config";
 
@@ -81,91 +80,78 @@ export const Header = () => {
       {/* Navigation */}
       <nav style={{ display: "flex", alignItems: "center", gap: 40 }}>
         <a
-          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
+          style={navLinkStyle}
           onClick={() => navigate("/")}
           onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
           onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
-          <FaHome style={{ fontSize: 22, marginBottom: -2 }} /> Home
+          Home
         </a>
         <a
-          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
+          style={navLinkStyle}
           onClick={() => navigate("/verify-certificate")}
           onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
           onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
-          <FaCheckCircle style={{ fontSize: 22, marginBottom: -2 }} /> Verify Certificate
+          Verify Certificate
         </a>
         <a
-          style={{ ...navLinkStyle, padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}
+          style={navLinkStyle}
           onClick={() => navigate("/institution-portal")}
           onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
           onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
-          {/* You can add an icon here if desired, e.g., <FaUniversity /> */}
           Institution Portal
         </a>
-<a
-  style={navLinkStyle}
-  onClick={() => navigate("/admin-dashboard")} // 👈 must match App.jsx
-  onMouseOver={(e) => (e.currentTarget.style.color = "#1976d2")}
-  onMouseOut={(e) => (e.currentTarget.style.color = "#222")}
->
-  <FaTachometerAlt style={{ fontSize: 22, marginBottom: -2 }} /> Admin Dashboard
-</a>
+        <a
+          style={navLinkStyle}
+          onClick={() => navigate("/admin-dashboard")}
+          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
+          onMouseOut={e => e.currentTarget.style.color = '#222'}
+        >
+          Admin Dashboard
+        </a>
 
         {user ? (
-          <div style={{ position: "relative", marginLeft: 56 }} ref={userBtnRef}>
+          <div style={{ position: "relative", marginLeft: 40 }} ref={userBtnRef}>
             <button
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 18,
-                fontWeight: 900,
-                fontSize: 22,
+                fontWeight: 700,
+                fontSize: 18,
                 color: "#1976d2",
-                background: "linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)",
-                borderRadius: 999,
-                padding: "14px 38px 14px 24px",
-                boxShadow: "0 6px 20px rgba(25,118,210,0.13)",
-                letterSpacing: 1.5,
-                border: "2.5px solid #b6c6e3",
+                background: showLogout
+                  ? "linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)"
+                  : "linear-gradient(90deg, #fafdff 0%, #e3f0ff 100%)",
+                borderRadius: 16,
+                padding: "12px 32px",
+                border: showLogout ? "2.5px solid #1976d2" : "2px solid #b6c6e3",
                 cursor: "pointer",
-                transition: "background 0.2s, box-shadow 0.2s, border 0.2s",
-                outline: showLogout ? "2px solid #1976d2" : "none",
-                minWidth: 220,
+                minWidth: 180,
+                boxShadow: showLogout
+                  ? "0 4px 16px rgba(25,118,210,0.13)"
+                  : "0 2px 8px rgba(80,120,200,0.10)",
+                transition: "border 0.2s, box-shadow 0.2s, background 0.2s",
+                outline: "none",
+                textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: 240,
+                letterSpacing: 0.5,
               }}
               onClick={() => setShowLogout((v) => !v)}
               onMouseOver={e => {
                 e.currentTarget.style.background = 'linear-gradient(90deg, #cbe5ff 0%, #e3f0ff 100%)';
                 e.currentTarget.style.border = '2.5px solid #1976d2';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(25,118,210,0.13)';
               }}
               onMouseOut={e => {
-                e.currentTarget.style.background = 'linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)';
-                e.currentTarget.style.border = '2.5px solid #b6c6e3';
+                e.currentTarget.style.background = 'linear-gradient(90deg, #fafdff 0%, #e3f0ff 100%)';
+                e.currentTarget.style.border = '2px solid #b6c6e3';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(80,120,200,0.10)';
               }}
             >
-              <span style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #1976d2 0%, #21c6f3 100%)",
-                color: "#fff",
-                fontWeight: 900,
-                fontSize: 24,
-                boxShadow: "0 2px 12px rgba(25,118,210,0.13)",
-              }}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10" cy="7" r="4" fill="#fff" fillOpacity=".7"/>
-                  <ellipse cx="10" cy="15.5" rx="6.5" ry="3.5" fill="#fff" fillOpacity=".4"/>
-                </svg>
-              </span>
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 180 }}>
-                {user.displayName || user.email}
-              </span>
+              {user.displayName || user.email}
             </button>
             {showLogout && (
               <div
@@ -178,7 +164,7 @@ export const Header = () => {
                   borderRadius: 8,
                   boxShadow: "0 4px 16px rgba(80,120,200,0.13)",
                   zIndex: 1000,
-                  minWidth: 160,
+                  minWidth: 120,
                   padding: 0,
                   display: "flex",
                   flexDirection: "column",
@@ -190,9 +176,9 @@ export const Header = () => {
                     background: "none",
                     border: "none",
                     color: "#ff1744",
-                    fontWeight: 700,
-                    fontSize: 18,
-                    padding: "14px 0",
+                    fontWeight: 600,
+                    fontSize: 16,
+                    padding: "12px 0",
                     borderRadius: 8,
                     cursor: "pointer",
                     transition: "background 0.2s",
@@ -207,17 +193,17 @@ export const Header = () => {
         ) : (
           <>
             <button
-              style={{ ...loginBtnStyle, marginLeft: 40, display: "flex", alignItems: "center", gap: 8 }}
+              style={{ ...loginBtnStyle, marginLeft: 40 }}
               className="login ml-[20px]"
               onClick={() => navigate("/login")}
             >
-              <FaSignInAlt style={{ fontSize: 22, marginBottom: -2 }} /> Log In
+              Log In
             </button>
             <button
-              style={{ ...signupBtnStyle, marginLeft: 0, display: "flex", alignItems: "center", gap: 8 }}
+              style={{ ...signupBtnStyle, marginLeft: 0 }}
               onClick={() => navigate("/signup")}
             >
-              <FaUserPlus style={{ fontSize: 22, marginBottom: -2 }} /> Sign Up
+              Sign Up
             </button>
           </>
         )}
