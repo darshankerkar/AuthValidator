@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase/config";
+import ModalLogin from "./ModalLogin";
+import ModalSignUp from "./ModalSignUp";
 
 export const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showLogout, setShowLogout] = useState(false);
   const userBtnRef = useRef();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
   // Hide logout dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
@@ -195,16 +199,22 @@ export const Header = () => {
             <button
               style={{ ...loginBtnStyle, marginLeft: 40 }}
               className="login ml-[20px]"
-              onClick={() => navigate("/login")}
+              onClick={() => setShowLoginModal(true)}
             >
               Log In
             </button>
+      {showLoginModal && (
+        <ModalLogin onClose={() => setShowLoginModal(false)} onSuccess={() => setShowLoginModal(false)} />
+      )}
             <button
               style={{ ...signupBtnStyle, marginLeft: 0 }}
-              onClick={() => navigate("/signup")}
+              onClick={() => setShowSignUpModal(true)}
             >
               Sign Up
             </button>
+      {showSignUpModal && (
+        <ModalSignUp onClose={() => setShowSignUpModal(false)} onSuccess={() => setShowSignUpModal(false)} />
+      )}
           </>
         )}
       </nav>

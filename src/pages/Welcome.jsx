@@ -3,10 +3,12 @@ import { Header } from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase/config";
+import ModalLogin from "../components/ModalLogin";
 
 function Welcome() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
@@ -476,12 +478,15 @@ function Welcome() {
             if (user) {
               navigate('/verify-certificate');
             } else {
-              navigate('/login');
+              setShowLoginModal(true);
             }
           }}
         >
           Get Started Today
         </button>
+        {showLoginModal && (
+          <ModalLogin onClose={() => setShowLoginModal(false)} onSuccess={() => { setShowLoginModal(false); navigate('/verify-certificate'); }} />
+        )}
       </section>
 
       {/* Footer Section */}
