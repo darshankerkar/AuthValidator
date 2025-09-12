@@ -100,7 +100,7 @@ function Welcome() {
 
           <div className="hero-visual" style={{ width: 420, display: 'flex', justifyContent: 'center' }}>
             <div className="visual-card" style={{ width: 380, height: 260, background: 'linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 12px 40px rgba(10,30,60,0.12)' }}>
-              <img src="/vite.svg" style={{ width: 300, filter: 'drop-shadow(0 18px 40px rgba(10,30,60,0.12))' }} alt="illustration" />
+              <img src="/Screenshot_2025-09-13_012344-removebg-preview.png" style={{ width: 300, filter: 'drop-shadow(0 18px 40px rgba(10,30,60,0.12))' }} alt="illustration" />
             </div>
           </div>
         </div>
