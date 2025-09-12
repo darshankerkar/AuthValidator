@@ -61,7 +61,7 @@ export const Header = () => {
   {/* Logo and Title */}
   <div className="header-brand" style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 320 }}>
         <img
-          src="AuthValidator_Logo.png"
+          src="/AuthValidator_Logo.png"
           alt="AuthValidator Logo"
           style={{
             width: 60,

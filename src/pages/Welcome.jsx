@@ -22,71 +22,89 @@ function Welcome() {
       {/* Hero Section */}
       <section className="hero-section"
         style={{
-          width: "98%",
-          height: "85%",
+          width: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          textAlign: "center",
+          textAlign: "left",
           background: "linear-gradient(120deg, #1976d2 0%, #21c6f3 100%)",
           color: "#fff",
-          padding: "72px 16px 90px 16px",
-          borderBottomLeftRadius: 32,
-          borderBottomRightRadius: 32,
+          padding: "64px 12px",
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
           boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
         }}
       >
-  <div className="hero-inner" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <h1 className="hero-title"
-            style={{
-              fontWeight: 800,
-              margin: 0,
-              fontFamily: "serif",
-              letterSpacing: 1,
-              textShadow: "0 2px 16px #1976d2, 0 1px 0 #fff",
-              maxWidth: 900,
-            }}
-          >
-            Secure Certificate Verification for India
-          </h1>
+        <div className="hero-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", maxWidth: 1100, gap: 32 }}>
+          <div className="hero-card" style={{ flex: 1, maxWidth: 640, background: "rgba(255,255,255,0.12)", borderRadius: 18, padding: 28, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.12)" }}>
+            <h1 className="hero-title"
+              style={{
+                fontWeight: 800,
+                margin: 0,
+                fontFamily: "serif",
+                letterSpacing: 0.6,
+                color: "#fff",
+                lineHeight: 1.02,
+              }}
+            >
+              Secure Certificate Verification for India
+            </h1>
+            <p className="hero-sub"
+              style={{
+                marginTop: 14,
+                maxWidth: 680,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                color: "rgba(255,255,255,0.92)",
+              }}
+            >
+              AuthValidator uses AI and blockchain to instantly verify academic certificates, prevent fraud, and restore trust across Indian institutions.
+            </p>
+            <div style={{ marginTop: 20, display: "flex", gap: 12, alignItems: "center" }}>
+              <button className="hero-cta"
+                style={{
+                  background: "linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)",
+                  color: "#fff",
+                  fontWeight: 800,
+                  fontSize: 18,
+                  padding: "12px 20px",
+                  borderRadius: 12,
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 6px 20px rgba(39,201,154,0.14)",
+                  transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                }}
+                onMouseOver={e => (e.currentTarget.style.transform = 'translateY(-3px)')}
+                onMouseOut={e => (e.currentTarget.style.transform = 'translateY(0)')}
+                onClick={() => navigate('/verify-certificate')}
+              >
+                Verify Now
+              </button>
+              <button
+                style={{
+                  background: "transparent",
+                  color: "#fff",
+                  border: "1px solid rgba(255,255,255,0.22)",
+                  padding: "10px 16px",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  fontWeight: 700,
+                  fontSize: 15,
+                }}
+                onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
+              >
+                Learn More
+              </button>
+            </div>
+          </div>
+
+          <div className="hero-visual" style={{ width: 420, display: 'flex', justifyContent: 'center' }}>
+            <div className="visual-card" style={{ width: 380, height: 260, background: 'linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 12px 40px rgba(10,30,60,0.12)' }}>
+              <img src="/vite.svg" style={{ width: 300, filter: 'drop-shadow(0 18px 40px rgba(10,30,60,0.12))' }} alt="illustration" />
+            </div>
+          </div>
         </div>
-        <p className="hero-sub"
-          style={{
-            maxWidth: 700,
-            margin: "0 auto 36px auto",
-            fontWeight: 400,
-            lineHeight: 1.5,
-            paddingTop: 32,
-            paddingLeft: 0,
-            textShadow: "0 1px 8px #1976d2, 0 1px 0 #fff",
-          }}
-        >
-          AuthValidator uses advanced AI and blockchain technology to instantly verify academic certificates, preventing fraud and ensuring institutional trust across Indian educational institutions.
-        </p>
-        <button className="hero-cta"
-          style={{
-            background: "linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 26,
-            padding: "18px 54px",
-            borderRadius: 14,
-            border: "none",
-            cursor: "pointer",
-            boxShadow: "0 2px 12px rgba(44,204,113,0.13)",
-            transition: "background 0.2s, box-shadow 0.2s",
-            marginTop: 18,
-            marginBottom: 0,
-            letterSpacing: 1,
-          }}
-          onMouseOver={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #27c99a 0%, #2ecc71 100%)')}
-          onMouseOut={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)')}
-          onClick={() => navigate('/verify-certificate')}
-        >
-          Verify Your Certificate Now
-        </button>
-  </section>
+      </section>
 
 <section className="stats-section py-14 px-4">
   <h2
