@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Header } from "../components/Header";
 import Footer from "../components/Footer";
@@ -51,7 +50,7 @@ export default function InstitutionPortal() {
   };
 
   // Simulate certificate verification (replace with real logic as needed)
-  const verifyCertificate = () => {
+  const verifyCertificate = (record) => {
     // For demo: randomly mark as Success or Forgery
     return Math.random() > 0.1 ? "Success" : "Forgery Detected";
   };
@@ -62,38 +61,35 @@ export default function InstitutionPortal() {
     setUploading(true);
     setUploadMsg("");
     try {
-      const records = await parseFile(file);
-      if (!Array.isArray(records) || records.length === 0) throw new Error("No records found in file");
-      // Prepare batch write
-      const batch = writeBatch(db);
-      const certsCol = collection(db, "certificates");
-      const now = Timestamp.now();
-      const uploadId = `${batchName}_${academicYear}_${Date.now()}`;
-      // Add each record to Firestore batch
-      records.forEach((_rec) => {
-        const certData = {
-          ..._rec,
-          batchName,
-          academicYear,
-          uploadId,
-          verifiedAt: now,
-          verificationResult: verifyCertificate(_rec),
-        };
-        const certDoc = doc(certsCol); // generate new doc ref
-        batch.set(certDoc, certData);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("batchName", batchName);
+      formData.append("academicYear", academicYear);
+
+      const response = await fetch("http://127.0.0.1:8000/api/bulk-upload/", {
+        method: "POST",
+        body: formData,
       });
-      await batch.commit();
-      setUploadHistory([
-        ...uploadHistory,
-        {
-          fileName: file.name,
-          batchName,
-          academicYear,
-          date: new Date().toLocaleString(),
-          total: records.length,
-        },
-      ]);
-      setUploadMsg(`Uploaded and verified ${records.length} certificates.`);
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        setUploadMsg("Upload failed: Invalid server response.");
+        return;
+      }
+
+      if (data.error) {
+        setUploadMsg("Upload failed: " + data.error);
+      } else if (data.results && Array.isArray(data.results)) {
+        const successCount = data.results.filter(r => r.status === "success").length;
+        const failCount = data.results.length - successCount;
+        setUploadMsg(
+          `Verification complete: ${successCount} certificate(s) verified, ${failCount} forged or failed.`
+        );
+      } else {
+        setUploadMsg("Upload successful: " + JSON.stringify(data));
+      }
     } catch (err) {
       setUploadMsg("Upload failed: " + err.message);
     } finally {
@@ -107,19 +103,19 @@ export default function InstitutionPortal() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)" }}>
       <Header />
-        <div className="institution-container" style={{ flex: 1, maxWidth: 500, margin: "0 auto", padding: "48px 16px 32px 16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ flex: 1, maxWidth: 500, margin: "0 auto", padding: "48px 16px 32px 16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <h1 style={{ textAlign: "center", fontSize: 38, fontWeight: 800, color: "#1976d2", marginBottom: 8, letterSpacing: 1, fontFamily: "serif" }}>Institution Portal</h1>
         <p style={{ textAlign: "center", fontSize: 20, color: "#444", marginBottom: 40, fontWeight: 500 }}>
           Manage bulk student record uploads and monitor institutional statistics for certificate verification
         </p>
         {/* Upload Section - vertical card layout */}
-          <div className="upload-card" style={{ background: "#fff", borderRadius: 18, boxShadow: "0 4px 24px 0 rgba(80,120,200,0.10)", padding: "36px 32px 32px 32px", width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ background: "#fff", borderRadius: 18, boxShadow: "0 4px 24px 0 rgba(80,120,200,0.10)", padding: "36px 32px 32px 32px", width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h2 style={{ color: "#1976d2", fontSize: 28, fontWeight: 700, marginBottom: 18, fontFamily: "serif", textAlign: "center" }}>Upload Student Records</h2>
           <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 18, alignItems: "center", marginBottom: 18 }}>
-              <input className="file-input" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onChange={handleFileChange} style={{ fontSize: 16 }} />
-              <input className="text-input" type="text" placeholder="Batch Name" value={batchName} onChange={e => setBatchName(e.target.value)} style={{ padding: "10px 14px", borderRadius: 8, border: "1.5px solid #b6c6e3", fontSize: 16, width: "100%" }} />
-              <input className="text-input" type="text" placeholder="Academic Year" value={academicYear} onChange={e => setAcademicYear(e.target.value)} style={{ padding: "10px 14px", borderRadius: 8, border: "1.5px solid #b6c6e3", fontSize: 16, width: "100%" }} />
-              <button className="upload-button" onClick={handleUpload} disabled={uploading} style={{ background: uploading ? "#b6c6e3" : "linear-gradient(90deg, #1976d2 0%, #21c6f3 100%)", color: "#fff", fontWeight: 700, fontSize: 18, border: "none", borderRadius: 10, padding: "12px 32px", cursor: uploading ? "not-allowed" : "pointer", boxShadow: "0 2px 8px rgba(25,118,210,0.10)", transition: "background 0.2s, box-shadow 0.2s", letterSpacing: 1, width: "100%" }}>{uploading ? "Uploading..." : "Verify Records"}</button>
+            <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onChange={handleFileChange} style={{ fontSize: 16 }} />
+            <input type="text" placeholder="Batch Name" value={batchName} onChange={e => setBatchName(e.target.value)} style={{ padding: "10px 14px", borderRadius: 8, border: "1.5px solid #b6c6e3", fontSize: 16, width: "100%" }} />
+            <input type="text" placeholder="Academic Year" value={academicYear} onChange={e => setAcademicYear(e.target.value)} style={{ padding: "10px 14px", borderRadius: 8, border: "1.5px solid #b6c6e3", fontSize: 16, width: "100%" }} />
+            <button onClick={handleUpload} disabled={uploading} style={{ background: uploading ? "#b6c6e3" : "linear-gradient(90deg, #1976d2 0%, #21c6f3 100%)", color: "#fff", fontWeight: 700, fontSize: 18, border: "none", borderRadius: 10, padding: "12px 32px", cursor: uploading ? "not-allowed" : "pointer", boxShadow: "0 2px 8px rgba(25,118,210,0.10)", transition: "background 0.2s, box-shadow 0.2s", letterSpacing: 1, width: "100%" }}>{uploading ? "Uploading..." : "Verify Records"}</button>
           </div>
           <div style={{ color: "#888", fontSize: 15, marginBottom: 8, textAlign: "center" }}>
             Accepted file types: CSV, Excel. Each row should represent a certificate record.
@@ -132,4 +128,9 @@ export default function InstitutionPortal() {
   );
 }
 
-/* Removed unused table style (kept in Dashboard) */
+const thTdStyle = {
+  padding: "12px 8px",
+  textAlign: "left",
+  verticalAlign: "middle",
+  borderBottom: "1px solid #eaeaea",
+};
