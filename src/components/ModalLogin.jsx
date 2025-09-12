@@ -37,12 +37,12 @@ export default function ModalLogin({ onClose, onSuccess }) {
   };
 
   return (
-    <div style={{
+    <div className="modal-backdrop" style={{
       position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(25, 118, 210, 0.10)", zIndex: 9999,
       display: "flex", alignItems: "center", justifyContent: "center",
       backdropFilter: "blur(2px)"
     }}>
-      <div style={{
+      <div className="modal-dialog" style={{
         background: "rgba(255,255,255,0.85)",
         borderRadius: 22,
         boxShadow: "0 8px 32px 0 rgba(25,118,210,0.13)",
@@ -65,7 +65,7 @@ export default function ModalLogin({ onClose, onSuccess }) {
           fontWeight: 900,
           letterSpacing: 1,
           textShadow: "0 2px 8px #e3f0ff"
-        }}>
+  }}>
           Log In
         </h1>
         <div style={{ textAlign: "left", marginBottom: 14 }}>

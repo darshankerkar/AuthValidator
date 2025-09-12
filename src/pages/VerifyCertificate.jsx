@@ -6,7 +6,7 @@ import { FaCloudUploadAlt, FaCheckCircle, FaExclamationTriangle } from "react-ic
 export default function VerifyCertificate() {
   const [file, setFile] = useState(null);
   const [certType, setCertType] = useState("");
-  const [result, setResult] = useState(""); // OCR result
+  // OCR result state removed (not directly used in UI)
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(""); // Verification message
   const [dragActive, setDragActive] = useState(false);
@@ -26,11 +26,10 @@ export default function VerifyCertificate() {
       if (!response.ok) {
         throw new Error("Failed to verify");
       }
-      const data = await response.json();
-      setResult(data.extracted_text || "No text found.");
-      setMessage("Certificate verified successfully!");
-    } catch (err) {
-      setResult("Error verifying certificate");
+  await response.json();
+  // we don't store extracted text in state currently; keep message
+  setMessage("Certificate verified successfully!");
+    } catch {
       setMessage("Certificate verification failed.");
     } finally {
       setLoading(false);
@@ -59,12 +58,12 @@ export default function VerifyCertificate() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)" }}>
+    <div className="verify-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)" }}>
       <Header />
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{
+      <div className="verify-wrapper" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div className="verify-card" style={{
           width: "100%",
-          maxWidth: 500,
+          maxWidth: 720,
           margin: "48px auto 0 auto",
           background: "#fff",
           borderRadius: 18,
@@ -73,12 +72,20 @@ export default function VerifyCertificate() {
           textAlign: "center",
           position: "relative"
         }}>
+          {loading && (
+            <div className="loading-overlay" role="status" aria-live="polite">
+              <div style={{display:'flex',alignItems:'center'}}>
+                <div className="spinner" aria-hidden="true" />
+                <div className="loading-text">Verifying...</div>
+              </div>
+            </div>
+          )}
           <h1 style={{ fontFamily: "serif", fontWeight: 800, fontSize: 34, color: "#1976d2", marginBottom: 8, letterSpacing: 1 }}>Verify Certificate</h1>
           <div style={{ color: "#555", fontSize: 19, marginBottom: 32, fontWeight: 500 }}>
             Upload your academic certificate to verify its authenticity using our AI-powered blockchain verification system.
           </div>
           {/* Drag and Drop Area */}
-          <form
+          <form className="drag-form"
             onDragEnter={handleDrag}
             onDragOver={handleDrag}
             onDragLeave={handleDrag}
@@ -87,6 +94,7 @@ export default function VerifyCertificate() {
             onClick={() => inputRef.current && inputRef.current.click()}
           >
             <div
+              className="drag-area"
               style={{
                 border: dragActive ? "2.5px dashed #27c99a" : "2.5px dashed #b6c6e3",
                 borderRadius: 12,
@@ -118,7 +126,7 @@ export default function VerifyCertificate() {
           <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 10, textAlign: "left" }}>
             Certificate Type
           </div>
-          <select
+          <select className="cert-select"
             value={certType}
             onChange={(e) => setCertType(e.target.value)}
             style={{
@@ -142,7 +150,7 @@ export default function VerifyCertificate() {
             <option value="diploma">Diploma</option>
             <option value="other">Other</option>
           </select>
-          <button
+          <button className="verify-button"
             onClick={handleVerify}
             style={{
               width: "100%",

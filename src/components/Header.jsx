@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase/config";
 import ModalLogin from "./ModalLogin";
@@ -8,6 +8,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showLogout, setShowLogout] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const userBtnRef = useRef();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -33,8 +34,14 @@ export const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  const location = useLocation();
+  // close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
-    <header
+    <header className="site-header"
       style={{
         background: "rgba(255,255,255,0.85)",
         backgroundImage: "linear-gradient(90deg, #e3f0ff 0%, #fafdff 100%)",
@@ -51,8 +58,8 @@ export const Header = () => {
         zIndex: 100,
       }}
     >
-      {/* Logo and Title */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 320 }}>
+  {/* Logo and Title */}
+  <div className="header-brand" style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 320 }}>
         <img
           src="AuthValidator_Logo.png"
           alt="AuthValidator Logo"
@@ -81,11 +88,31 @@ export const Header = () => {
         </span>
       </div>
 
-      {/* Navigation */}
-      <nav style={{ display: "flex", alignItems: "center", gap: 40 }}>
+  {/* Navigation */}
+  {/* Mobile hamburger toggle */}
+  <button
+    className="nav-toggle"
+    aria-label={mobileOpen ? "Close menu" : "Open menu"}
+    aria-expanded={mobileOpen}
+    onClick={() => setMobileOpen((v) => !v)}
+    style={{
+      display: "none",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: 8,
+      marginRight: 8,
+    }}
+  >
+    <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
+    <span style={{ display: "block", width: 18, height: 2, background: "#1976d2", margin: "4px 0" }} />
+    <span style={{ display: "block", width: 14, height: 2, background: "#1976d2", margin: "4px 0" }} />
+  </button>
+
+  <nav className={`site-nav ${mobileOpen ? 'mobile-open' : ''}`} style={{ display: "flex", alignItems: "center", gap: 40 }}>
         <a
           style={navLinkStyle}
-          onClick={() => navigate("/")}
+          onClick={() => { navigate("/"); setMobileOpen(false); }}
           onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
           onMouseOut={e => e.currentTarget.style.color = '#222'}
         >
@@ -199,7 +226,7 @@ export const Header = () => {
             <button
               style={{ ...loginBtnStyle, marginLeft: 40 }}
               className="login ml-[20px]"
-              onClick={() => setShowLoginModal(true)}
+              onClick={() => { setShowLoginModal(true); setMobileOpen(false); }}
             >
               Log In
             </button>
@@ -208,7 +235,7 @@ export const Header = () => {
       )}
             <button
               style={{ ...signupBtnStyle, marginLeft: 0 }}
-              onClick={() => setShowSignUpModal(true)}
+              onClick={() => { setShowSignUpModal(true); setMobileOpen(false); }}
             >
               Sign Up
             </button>

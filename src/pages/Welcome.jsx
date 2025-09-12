@@ -20,7 +20,7 @@ function Welcome() {
       <Header />
 
       {/* Hero Section */}
-      <section
+      <section className="hero-section"
         style={{
           width: "98%",
           height: "85%",
@@ -37,10 +37,9 @@ function Welcome() {
           boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <h1
+  <div className="hero-inner" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <h1 className="hero-title"
             style={{
-              fontSize: 54,
               fontWeight: 800,
               margin: 0,
               fontFamily: "serif",
@@ -52,9 +51,8 @@ function Welcome() {
             Secure Certificate Verification for India
           </h1>
         </div>
-        <p
+        <p className="hero-sub"
           style={{
-            fontSize: 26,
             maxWidth: 700,
             margin: "0 auto 36px auto",
             fontWeight: 400,
@@ -66,7 +64,7 @@ function Welcome() {
         >
           AuthValidator uses advanced AI and blockchain technology to instantly verify academic certificates, preventing fraud and ensuring institutional trust across Indian educational institutions.
         </p>
-        <button
+        <button className="hero-cta"
           style={{
             background: "linear-gradient(90deg, #2ecc71 0%, #27c99a 100%)",
             color: "#fff",
@@ -88,9 +86,9 @@ function Welcome() {
         >
           Verify Your Certificate Now
         </button>
-      </section>
+  </section>
 
-<section className="py-14 px-4">
+<section className="stats-section py-14 px-4">
   <h2
     style={{
       textAlign: "center",
@@ -104,7 +102,7 @@ function Welcome() {
     Trusted Across India
   </h2>
 
-  <div
+  <div className="stats-grid"
     style={{
       display: "flex",
       justifyContent: "center",
@@ -203,21 +201,21 @@ function Welcome() {
           }}
         >
           {/* Card 1 */}
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e0e0e0",
-              borderRadius: 16,
-              width: 370,
-              minHeight: 210,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "32px 24px",
-               boxShadow:
-            "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
-          transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            }}
+          <div className="feature-card"
+          style={{
+            background: "#fff",
+            border: "1px solid #e0e0e0",
+            borderRadius: 16,
+            width: 370,
+            minHeight: 210,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "32px 24px",
+             boxShadow:
+          "0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15)", // <-- shadow added
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          }}
           >
             <div style={{ fontSize: 32, color: "#1976d2", marginBottom: 12 }}>
               <span role="img" aria-label="bolt">⚡</span>
@@ -230,7 +228,7 @@ function Welcome() {
             </p>
           </div>
           {/* Card 2 */}
-          <div
+          <div className="feature-card"
             style={{
               background: "#fff",
               border: "1px solid #e0e0e0",
@@ -257,7 +255,7 @@ function Welcome() {
             </p>
           </div>
           {/* Card 3 */}
-          <div
+          <div className="feature-card"
             style={{
               background: "#fff",
               border: "1px solid #e0e0e0",

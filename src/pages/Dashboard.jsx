@@ -4,12 +4,7 @@ import { Header } from "../components/Header";
 import { db, auth } from "../firebase/config";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 
-const statsCardsData = [
-  { id: 1, value: 5, label: "Certificates Verified", color: "#27c99a", icon: <FaCertificate /> },
-  { id: 2, value: 0, label: "Successful Verifications", color: "#27c99a", icon: <FaCheckCircle /> },
-  { id: 3, value: "Expression: forgery_attempts_count", label: "Forgeries Detected", color: "#e74c3c", icon: <FaExclamationCircle /> },
-  { id: 4, value: 2, label: "Institutions Onboarded", color: "#27c99a", icon: <FaUniversity /> },
-];
+// No dummy base stats here — runtime values are computed from `logs` for the signed-in user
 
 // No more dummy data. We'll fetch from Firestore.
 
@@ -37,6 +32,11 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const logsPerPage = 5;
 
+  // Derived stats from logs
+  const forgedCount = logs.filter(l => l.verificationResult === "Forgery Detected").length;
+  const successCount = logs.filter(l => l.verificationResult === "Success").length;
+  const totalVerified = logs.length;
+
   // Listen for auth state
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => {
@@ -58,12 +58,13 @@ const Dashboard = () => {
         const certsRef = collection(db, "certificates");
         // Assuming each certificate has a field 'email' for the uploader
         const q = query(certsRef, where("email", "==", user.email), orderBy("verifiedAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setLogs(data);
-      } catch (err) {
-        setLogs([]);
-      } finally {
+          const querySnapshot = await getDocs(q);
+          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setLogs(data);
+        } catch (error) {
+          console.error("Error fetching logs:", error);
+          setLogs([]);
+        } finally {
         setLoading(false);
       }
     };
@@ -80,8 +81,15 @@ const Dashboard = () => {
   const totalPages = Math.ceil(filteredLogs.length / logsPerPage) || 1;
   const paginatedLogs = filteredLogs.slice((page - 1) * logsPerPage, page * logsPerPage);
 
-  // Filter out 'Institutions Onboarded' and 'Forgeries Detected' cards
-  const filteredStatsCards = statsCardsData.filter(card => card.label !== "Institutions Onboarded" && card.label !== "Forgeries Detected");
+  // Build runtime stats cards and filter out Institutions (we don't track that here)
+  const statsCardsData = [
+    { id: 1, value: totalVerified, label: "Certificates Verified", color: "#27c99a", icon: <FaCertificate /> },
+    { id: 2, value: successCount, label: "Successful Verifications", color: "#27c99a", icon: <FaCheckCircle /> },
+    { id: 3, value: forgedCount, label: "Forgeries Detected", color: "#e74c3c", icon: <FaExclamationCircle /> },
+    // Institutions count is not tracked here; omit from view
+  ];
+
+  const filteredStatsCards = statsCardsData; // already tailored
 
   return (
     <div style={{ minHeight: "100vh", background: "#f6f8fa", display: "flex", flexDirection: "column", fontFamily: 'Inter, sans-serif' }}>
@@ -92,16 +100,16 @@ const Dashboard = () => {
           Monitor certificate verification activities and manage institutional partnerships across India
         </p>
         {/* Stats Cards */}
-        <div style={{ display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center", marginBottom: 48 }}>
+        <div className="stats-cards" style={{ marginBottom: 48 }}>
           {filteredStatsCards.map(({ id, value, label, color, icon }) => {
             const isRed = color === "#e74c3c";
             return (
               <div
                 key={id}
+                className={`stat-card ${isRed ? 'stat-card--red' : ''}`}
                 style={{
                   background: "#fff",
                   borderRadius: 14,
-                  padding: "28px 32px 24px 32px",
                   boxShadow: "0 2px 12px rgba(60,80,120,0.07)",
                   color: isRed ? "#e74c3c" : "#1976d2",
                   display: "flex",
@@ -111,11 +119,12 @@ const Dashboard = () => {
                   minHeight: 140,
                   border: isRed ? "1.5px solid #e74c3c22" : "1.5px solid #1976d222",
                   transition: "box-shadow 0.2s, border 0.2s",
+                  padding: "28px 32px 24px 32px"
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.92 }}>{icon}</div>
                 <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 6, letterSpacing: 0.2, color: "#222" }}>{label}</div>
-                <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 2, lineHeight: 1, color: isRed ? "#e74c3c" : "#1976d2" }}>{value}</div>
+                <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 2, lineHeight: 1, color: isRed ? "#e74c3c" : "#1976d2" }}>{loading ? '...' : value}</div>
                 {isRed ? (
                   <div style={{ fontSize: 13, opacity: 0.85, userSelect: "text", color: "#e74c3c" }}>Fraudulent attempts</div>
                 ) : null}
