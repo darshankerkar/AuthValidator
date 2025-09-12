@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCertificate, FaCheckCircle, FaExclamationCircle, FaUniversity, FaEye } from "react-icons/fa";
-import { Header  } from "../components/Header";
+import { Header } from "../components/Header";
+import { db, auth } from "../firebase/config";
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 
 const statsCardsData = [
   { id: 1, value: 5, label: "Certificates Verified", color: "#27c99a", icon: <FaCertificate /> },
@@ -9,25 +11,7 @@ const statsCardsData = [
   { id: 4, value: 2, label: "Institutions Onboarded", color: "#27c99a", icon: <FaUniversity /> },
 ];
 
-const verificationLogsData = [
-  {
-    user: "diploma_bravo.docx",
-    certificate: "certificate_alpha.pdf",
-    result: "Forgery Detected",
-    resultIcon: <FaExclamationCircle style={{ color: "#e74c3c" }} />,
-    dateTime: "Sep 5, 2025 8:40 am",
-    ip: "192.168.1.101",
-  },
-  {
-    user: "john_doe.docx",
-    certificate: "certificate_beta.pdf",
-    result: "Success",
-    resultIcon: <FaCheckCircle style={{ color: "#27c99a" }} />,
-    dateTime: "Sep 3, 2025 7:35 am",
-    ip: "192.168.1.100",
-  },
-  // Add more verification logs as needed
-];
+// No more dummy data. We'll fetch from Firestore.
 
 const thTdStyle = {
   padding: "12px 8px",
@@ -48,79 +32,109 @@ const paginationButtonStyle = {
 const Dashboard = () => {
   const [filterResult, setFilterResult] = useState("All Results");
   const [page, setPage] = useState(1);
-  const totalPages = 3; // Example total pages for pagination
+  const [logs, setLogs] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const logsPerPage = 5;
+
+  // Listen for auth state
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch logs for current user
+  useEffect(() => {
+    if (!user) {
+      setLogs([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const fetchLogs = async () => {
+      try {
+        const certsRef = collection(db, "certificates");
+        // Assuming each certificate has a field 'email' for the uploader
+        const q = query(certsRef, where("email", "==", user.email), orderBy("verifiedAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setLogs(data);
+      } catch (err) {
+        setLogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLogs();
+  }, [user]);
 
   // Filter logs based on filterResult
   const filteredLogs =
     filterResult === "All Results"
-      ? verificationLogsData
-      : verificationLogsData.filter((log) => log.result === filterResult);
-      
-      
-        return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #e3f0ff 0%, #fafdff 100%)", display: "flex", flexDirection: "column" }}>
+      ? logs
+      : logs.filter((log) => log.verificationResult === filterResult);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredLogs.length / logsPerPage) || 1;
+  const paginatedLogs = filteredLogs.slice((page - 1) * logsPerPage, page * logsPerPage);
+
+  // Filter out 'Institutions Onboarded' and 'Forgeries Detected' cards
+  const filteredStatsCards = statsCardsData.filter(card => card.label !== "Institutions Onboarded" && card.label !== "Forgeries Detected");
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f6f8fa", display: "flex", flexDirection: "column", fontFamily: 'Inter, sans-serif' }}>
       <Header />
-      <div style={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: "40px 16px 32px 16px" }}>
-        <h1 style={{ textAlign: "center", fontSize: 38, fontWeight: 800, color: "#1976d2", marginBottom: 8, letterSpacing: 1, fontFamily: "serif" }}>Admin Dashboard</h1>
-        <p style={{ textAlign: "center", fontSize: 20, color: "#444", marginBottom: 40, fontWeight: 500 }}>
-          Monitor system-wide certificate verification activities and manage institutional partnerships across India
+      <div style={{ flex: 1, maxWidth: 1100, margin: "0 auto", padding: "40px 16px 32px 16px" }}>
+        <h1 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, color: "#1a237e", marginBottom: 8, letterSpacing: 0.5, fontFamily: "Inter, sans-serif" }}>Admin Dashboard</h1>
+        <p style={{ textAlign: "center", fontSize: 18, color: "#444", marginBottom: 36, fontWeight: 500, maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>
+          Monitor certificate verification activities and manage institutional partnerships across India
         </p>
-        {/* Cards with icons and descriptions */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-            gap: 28,
-            marginBottom: 60,
-          }}
-        >
-          {statsCardsData.map(({ id, value, label, color, icon }) => {
+        {/* Stats Cards */}
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center", marginBottom: 48 }}>
+          {filteredStatsCards.map(({ id, value, label, color, icon }) => {
             const isRed = color === "#e74c3c";
             return (
               <div
                 key={id}
                 style={{
-                  background: isRed
-                    ? "linear-gradient(90deg, #e74c3c 0%, #ffb199 100%)"
-                    : "linear-gradient(90deg, #27c99a 0%, #a4f8a2 100%)",
-                  borderRadius: 16,
-                  padding: 32,
-                  boxShadow: isRed
-                    ? "0 8px 32px rgba(231,76,60,0.13)"
-                    : "0 8px 32px rgba(39,201,154,0.13)",
-                  color: isRed ? "#fff" : "#222",
+                  background: "#fff",
+                  borderRadius: 14,
+                  padding: "28px 32px 24px 32px",
+                  boxShadow: "0 2px 12px rgba(60,80,120,0.07)",
+                  color: isRed ? "#e74c3c" : "#1976d2",
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "flex-start",
-                  minHeight: 160,
-                  position: "relative",
-                  overflow: "hidden"
+                  alignItems: "center",
+                  minWidth: 220,
+                  minHeight: 140,
+                  border: isRed ? "1.5px solid #e74c3c22" : "1.5px solid #1976d222",
+                  transition: "box-shadow 0.2s, border 0.2s",
                 }}
               >
-                <div style={{ fontSize: 38, marginBottom: 18, opacity: 0.9 }}>{icon}</div>
-                <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8, letterSpacing: 0.5 }}>{label}</div>
-                <div style={{ fontSize: 40, fontWeight: 900, marginBottom: 6, lineHeight: 1 }}>{value}</div>
+                <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.92 }}>{icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 6, letterSpacing: 0.2, color: "#222" }}>{label}</div>
+                <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 2, lineHeight: 1, color: isRed ? "#e74c3c" : "#1976d2" }}>{value}</div>
                 {isRed ? (
-                  <div style={{ fontSize: 15, opacity: 0.85, userSelect: "text" }}>Fraudulent attempts</div>
-                ) : label === "Institutions Onboarded" ? null : (
-                  <div style={{ fontSize: 15, opacity: 0.85, userSelect: "text" }}>{label}</div>
-                )}
+                  <div style={{ fontSize: 13, opacity: 0.85, userSelect: "text", color: "#e74c3c" }}>Fraudulent attempts</div>
+                ) : null}
               </div>
             );
           })}
         </div>
         {/* Verification Logs Section */}
-        <div style={{ maxWidth: 1000, margin: "0 auto", background: "#fff", borderRadius: 16, boxShadow: "0 4px 24px 0 rgba(80,120,200,0.10)", padding: "32px 24px 40px 24px" }}>
-          <h2 style={{ marginBottom: 8, fontWeight: 800, fontSize: 26, color: "#1976d2", letterSpacing: 0.5 }}>Verification Logs</h2>
-          <p style={{ marginBottom: 24, color: "#666", fontSize: 16, fontWeight: 500 }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", background: "#fff", borderRadius: 14, boxShadow: "0 2px 12px rgba(60,80,120,0.07)", padding: "28px 20px 32px 20px" }}>
+          <h2 style={{ marginBottom: 8, fontWeight: 800, fontSize: 22, color: "#1a237e", letterSpacing: 0.2 }}>Verification Logs</h2>
+          <p style={{ marginBottom: 18, color: "#666", fontSize: 15, fontWeight: 500 }}>
             Real-time verification activities and system monitoring
           </p>
-          <div style={{ marginBottom: 16, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <label htmlFor="filter" style={{ fontWeight: 600 }}>Filter by Result:</label>
+          <div style={{ marginBottom: 14, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <label htmlFor="filter" style={{ fontWeight: 600, fontSize: 15 }}>Filter by Result:</label>
             <select
               id="filter"
               name="filter"
-              style={{ padding: 8, borderRadius: 6, border: "1.5px solid #b6c6e3", fontSize: 16, fontWeight: 500 }}
+              style={{ padding: 7, borderRadius: 6, border: "1.2px solid #b6c6e3", fontSize: 15, fontWeight: 500 }}
               value={filterResult}
               onChange={(e) => setFilterResult(e.target.value)}
             >
@@ -130,26 +144,26 @@ const Dashboard = () => {
             </select>
             <button
               style={{
-                padding: "8px 18px",
-                background: "linear-gradient(90deg, #1976d2 0%, #21c6f3 100%)",
+                padding: "7px 16px",
+                background: "#1976d2",
                 color: "#fff",
-                borderRadius: 8,
+                borderRadius: 7,
                 border: "none",
                 cursor: "pointer",
                 fontWeight: 700,
-                fontSize: 16,
-                letterSpacing: 0.5,
-                boxShadow: "0 2px 8px rgba(25,118,210,0.10)"
+                fontSize: 15,
+                letterSpacing: 0.2,
+                boxShadow: "0 1px 4px rgba(25,118,210,0.08)"
               }}
               onClick={() => setPage(1)}
             >
-              Apply Filter
+              Apply
             </button>
           </div>
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, background: "#fff", borderRadius: 12, overflow: "hidden" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, background: "#fff", borderRadius: 10, overflow: "hidden" }}>
               <thead>
-                <tr style={{ background: "#fafdff" }}>
+                <tr style={{ background: "#f6f8fa" }}>
                   <th style={thTdStyle}>User</th>
                   <th style={thTdStyle}>Certificate</th>
                   <th style={thTdStyle}>Result</th>
@@ -159,46 +173,55 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredLogs.slice((page - 1) * 5, page * 5).map((log, idx) => (
-                  <tr key={idx} style={{ background: idx % 2 === 0 ? "#f6f8fa" : "#fff" }}>
-                    <td style={thTdStyle}>{log.user}</td>
-                    <td style={thTdStyle}>{log.certificate}</td>
-                    <td style={thTdStyle} title={log.result}>
-                      <span style={{ marginRight: 6 }}>{log.resultIcon}</span>
-                      {log.result}
-                    </td>
-                    <td style={thTdStyle}>{log.dateTime}</td>
-                    <td style={thTdStyle}>{log.ip}</td>
-                    <td style={thTdStyle}>
-                      <button
-                        title="View Details"
-                        style={{
-                          background: "linear-gradient(90deg, #1976d2 0%, #21c6f3 100%)",
-                          border: "none",
-                          color: "#fff",
-                          padding: "7px 10px",
-                          borderRadius: 6,
-                          cursor: "pointer",
-                          fontSize: 15,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 2px 8px rgba(25,118,210,0.10)"
-                        }}
-                        onClick={() => alert(`Viewing details of ${log.user}`)}
-                      >
-                        <FaEye />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {loading ? (
+                  <tr><td colSpan={6} style={{ textAlign: "center", color: "#888", fontSize: 16 }}>Loading...</td></tr>
+                ) : paginatedLogs.length === 0 ? (
+                  <tr><td colSpan={6} style={{ textAlign: "center", color: "#888", fontSize: 16 }}>No verification logs found.</td></tr>
+                ) : (
+                  paginatedLogs.map((log, idx) => (
+                    <tr key={log.id || idx} style={{ background: idx % 2 === 0 ? "#fafdff" : "#fff" }}>
+                      <td style={thTdStyle}>{log.email || "-"}</td>
+                      <td style={thTdStyle}>{log.certificateName || log.certificate || "-"}</td>
+                      <td style={thTdStyle} title={log.verificationResult}>
+                        <span style={{ marginRight: 6 }}>
+                          {log.verificationResult === "Success" ? <FaCheckCircle style={{ color: "#27c99a" }} /> : <FaExclamationCircle style={{ color: "#e74c3c" }} />}
+                        </span>
+                        {log.verificationResult}
+                      </td>
+                      <td style={thTdStyle}>{log.verifiedAt && log.verifiedAt.toDate ? log.verifiedAt.toDate().toLocaleString() : "-"}</td>
+                      <td style={thTdStyle}>{log.ip || "-"}</td>
+                      <td style={thTdStyle}>
+                        <button
+                          title="View Details"
+                          style={{
+                            background: "#f6f8fa",
+                            border: "1.2px solid #1976d2",
+                            color: "#1976d2",
+                            padding: "6px 10px",
+                            borderRadius: 6,
+                            cursor: "pointer",
+                            fontSize: 15,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: "none",
+                            transition: "background 0.15s, color 0.15s, border 0.15s"
+                          }}
+                          onClick={() => alert(`Viewing details of ${log.certificateName || log.certificate || log.id}`)}
+                        >
+                          <FaEye />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
           {/* Pagination Controls */}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 28, gap: 14 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 22, gap: 10 }}>
             <button
-              style={{ ...paginationButtonStyle, fontWeight: 700, fontSize: 15, borderRadius: 8 }}
+              style={{ ...paginationButtonStyle, fontWeight: 700, fontSize: 15, borderRadius: 7, background: "#f6f8fa", color: "#1976d2", border: "1.2px solid #b6c6e3" }}
               disabled={page === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
             >
@@ -209,12 +232,12 @@ const Dashboard = () => {
                 key={num}
                 style={{
                   ...paginationButtonStyle,
-                  background: page === num + 1 ? "linear-gradient(90deg, #1976d2 0%, #21c6f3 100%)" : "#fff",
+                  background: page === num + 1 ? "#1976d2" : "#fff",
                   color: page === num + 1 ? "#fff" : "#1976d2",
                   borderColor: page === num + 1 ? "#1976d2" : "#b6c6e3",
                   fontWeight: page === num + 1 ? "700" : "normal",
                   fontSize: 15,
-                  borderRadius: 8
+                  borderRadius: 7
                 }}
                 onClick={() => setPage(num + 1)}
               >
@@ -222,7 +245,7 @@ const Dashboard = () => {
               </button>
             ))}
             <button
-              style={{ ...paginationButtonStyle, fontWeight: 700, fontSize: 15, borderRadius: 8 }}
+              style={{ ...paginationButtonStyle, fontWeight: 700, fontSize: 15, borderRadius: 7, background: "#f6f8fa", color: "#1976d2", border: "1.2px solid #b6c6e3" }}
               disabled={page === totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             >

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Header } from "../components/Header";
 import Footer from "../components/Footer";
@@ -61,35 +62,38 @@ export default function InstitutionPortal() {
     setUploading(true);
     setUploadMsg("");
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("batchName", batchName);
-      formData.append("academicYear", academicYear);
-
-      const response = await fetch("http://127.0.0.1:8000/api/bulk-upload/", {
-        method: "POST",
-        body: formData,
+      const records = await parseFile(file);
+      if (!Array.isArray(records) || records.length === 0) throw new Error("No records found in file");
+      // Prepare batch write
+      const batch = writeBatch(db);
+      const certsCol = collection(db, "certificates");
+      const now = Timestamp.now();
+      const uploadId = `${batchName}_${academicYear}_${Date.now()}`;
+      // Add each record to Firestore batch
+      records.forEach((rec, idx) => {
+        const certData = {
+          ...rec,
+          batchName,
+          academicYear,
+          uploadId,
+          verifiedAt: now,
+          verificationResult: verifyCertificate(rec),
+        };
+        const certDoc = doc(certsCol); // generate new doc ref
+        batch.set(certDoc, certData);
       });
-
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        setUploadMsg("Upload failed: Invalid server response.");
-        return;
-      }
-
-      if (data.error) {
-        setUploadMsg("Upload failed: " + data.error);
-      } else if (data.results && Array.isArray(data.results)) {
-        const successCount = data.results.filter(r => r.status === "success").length;
-        const failCount = data.results.length - successCount;
-        setUploadMsg(
-          `Verification complete: ${successCount} certificate(s) verified, ${failCount} forged or failed.`
-        );
-      } else {
-        setUploadMsg("Upload successful: " + JSON.stringify(data));
-      }
+      await batch.commit();
+      setUploadHistory([
+        ...uploadHistory,
+        {
+          fileName: file.name,
+          batchName,
+          academicYear,
+          date: new Date().toLocaleString(),
+          total: records.length,
+        },
+      ]);
+      setUploadMsg(`Uploaded and verified ${records.length} certificates.`);
     } catch (err) {
       setUploadMsg("Upload failed: " + err.message);
     } finally {

@@ -19,7 +19,7 @@ export default function VerifyCertificate() {
     try {
       setLoading(true);
       setMessage("");
-      const response = await fetch("http://127.0.0.1:8000/api/", {
+      const response = await fetch("http://127.0.0.1:8000/api/ocr/", {
         method: "POST",
         body: formData,
       });
