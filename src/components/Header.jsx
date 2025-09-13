@@ -9,6 +9,7 @@ export const Header = () => {
   const [user, setUser] = useState(null);
   const [showLogout, setShowLogout] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
   const userBtnRef = useRef();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -32,6 +33,12 @@ export const Header = () => {
       setUser(u);
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const location = useLocation();
@@ -91,15 +98,14 @@ export const Header = () => {
   {/* Navigation */}
   {/* Mobile hamburger toggle */}
   {/* Hamburger menu icon (visible on mobile) */}
-  {/* Hamburger menu icon (visible on mobile) */}
-  {!mobileOpen ? (
+  {/* Hamburger menu icon (visible on mobile only) */}
+  {isMobile && (!mobileOpen ? (
     <button
       className="nav-toggle"
       aria-label="Open menu"
       aria-expanded={mobileOpen}
       onClick={() => setMobileOpen(true)}
       style={{
-        display: window.innerWidth < 500 ? "block" : "none",
         background: "none",
         border: "none",
         cursor: "pointer",
@@ -119,7 +125,6 @@ export const Header = () => {
       aria-expanded={mobileOpen}
       onClick={() => setMobileOpen(false)}
       style={{
-        display: window.innerWidth < 500 ? "block" : "none",
         background: "none",
         border: "none",
         cursor: "pointer",
@@ -155,10 +160,11 @@ export const Header = () => {
         }} />
       </span>
     </button>
-  )}
+  ))}
 
   {/* Only show dropdown menu when hamburger is open */}
-  {mobileOpen && (
+  {/* Mobile dropdown nav */}
+  {isMobile && mobileOpen && (
     <nav className="site-nav mobile-open" style={{
       position: "fixed",
       top: 0,
@@ -197,6 +203,39 @@ export const Header = () => {
           <button
             style={{ ...signupBtnStyle, marginTop: 8, width: 180 }}
             onClick={() => { setShowSignUpModal(true); setMobileOpen(false); }}
+          >
+            Sign Up
+          </button>
+        </>
+      )}
+    </nav>
+  )}
+
+  {/* Desktop/laptop nav */}
+  {!isMobile && (
+    <nav className="site-nav desktop-nav" style={{ display: "flex", alignItems: "center", gap: 40 }}>
+      <a style={navLinkStyle} onClick={() => navigate("/")}>Home</a>
+      <a style={navLinkStyle} onClick={() => navigate("/verify-certificate")}>Verify Certificate</a>
+      <a style={navLinkStyle} onClick={() => navigate("/institution-portal")}>Institution Portal</a>
+      <a style={navLinkStyle} onClick={() => navigate("/admin-dashboard")}>Admin Dashboard</a>
+      {user ? (
+        <button
+          style={{ ...loginBtnStyle, marginLeft: 24 }}
+          onClick={() => auth.signOut()}
+        >
+          Log Out
+        </button>
+      ) : (
+        <>
+          <button
+            style={{ ...loginBtnStyle, marginLeft: 24 }}
+            onClick={() => setShowLoginModal(true)}
+          >
+            Log In
+          </button>
+          <button
+            style={{ ...signupBtnStyle, marginLeft: 16 }}
+            onClick={() => setShowSignUpModal(true)}
           >
             Sign Up
           </button>
