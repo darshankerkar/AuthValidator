@@ -90,161 +90,128 @@ export const Header = () => {
 
   {/* Navigation */}
   {/* Mobile hamburger toggle */}
-  <button
-    className="nav-toggle"
-    aria-label={mobileOpen ? "Close menu" : "Open menu"}
-    aria-expanded={mobileOpen}
-    onClick={() => setMobileOpen((v) => !v)}
-    style={{
-      display: "none",
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      padding: 8,
-      marginRight: 8,
-    }}
-  >
-    <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
-    <span style={{ display: "block", width: 18, height: 2, background: "#1976d2", margin: "4px 0" }} />
-    <span style={{ display: "block", width: 14, height: 2, background: "#1976d2", margin: "4px 0" }} />
-  </button>
+  {/* Hamburger menu icon (visible on mobile) */}
+  {/* Hamburger menu icon (visible on mobile) */}
+  {!mobileOpen ? (
+    <button
+      className="nav-toggle"
+      aria-label="Open menu"
+      aria-expanded={mobileOpen}
+      onClick={() => setMobileOpen(true)}
+      style={{
+        display: window.innerWidth < 500 ? "block" : "none",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        padding: 8,
+        marginRight: 8,
+        zIndex: 1200,
+      }}
+    >
+      <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
+      <span style={{ display: "block", width: 18, height: 2, background: "#1976d2", margin: "4px 0" }} />
+      <span style={{ display: "block", width: 14, height: 2, background: "#1976d2", margin: "4px 0" }} />
+    </button>
+  ) : (
+    <button
+      className="nav-toggle"
+      aria-label="Close menu"
+      aria-expanded={mobileOpen}
+      onClick={() => setMobileOpen(false)}
+      style={{
+        display: window.innerWidth < 500 ? "block" : "none",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        padding: 8,
+        marginRight: 8,
+        zIndex: 1200,
+      }}
+    >
+      {/* Cross (X) icon */}
+      <span style={{
+        display: "block",
+        width: 24,
+        height: 24,
+        position: "relative",
+      }}>
+        <span style={{
+          position: "absolute",
+          left: 0,
+          top: 11,
+          width: 24,
+          height: 2,
+          background: "#1976d2",
+          transform: "rotate(45deg)",
+        }} />
+        <span style={{
+          position: "absolute",
+          left: 0,
+          top: 11,
+          width: 24,
+          height: 2,
+          background: "#1976d2",
+          transform: "rotate(-45deg)",
+        }} />
+      </span>
+    </button>
+  )}
 
-  <nav className={`site-nav ${mobileOpen ? 'mobile-open' : ''}`} style={{ display: "flex", alignItems: "center", gap: 40 }}>
-        <a
-          style={navLinkStyle}
-          onClick={() => { navigate("/"); setMobileOpen(false); }}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
+  {/* Only show dropdown menu when hamburger is open */}
+  {mobileOpen && (
+    <nav className="site-nav mobile-open" style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      background: "rgba(255,255,255,0.98)",
+      zIndex: 1100,
+      boxShadow: "0 8px 32px 0 rgba(80,120,200,0.13)",
+      padding: "80px 0 0 0",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: 32,
+    }}>
+      <a style={navLinkStyle} onClick={() => { navigate("/"); setMobileOpen(false); }}>Home</a>
+      <a style={navLinkStyle} onClick={() => { navigate("/verify-certificate"); setMobileOpen(false); }}>Verify Certificate</a>
+      <a style={navLinkStyle} onClick={() => { navigate("/institution-portal"); setMobileOpen(false); }}>Institution Portal</a>
+      <a style={navLinkStyle} onClick={() => { navigate("/admin-dashboard"); setMobileOpen(false); }}>Admin Dashboard</a>
+      {user ? (
+        <button
+          style={{ ...loginBtnStyle, marginTop: 16, width: 180 }}
+          onClick={() => { auth.signOut(); setMobileOpen(false); }}
         >
-          Home
-        </a>
-        <a
-          style={navLinkStyle}
-          onClick={() => navigate("/verify-certificate")}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
-        >
-          Verify Certificate
-        </a>
-        <a
-          style={navLinkStyle}
-          onClick={() => navigate("/institution-portal")}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
-        >
-          Institution Portal
-        </a>
-        <a
-          style={navLinkStyle}
-          onClick={() => navigate("/admin-dashboard")}
-          onMouseOver={e => e.currentTarget.style.color = '#1976d2'}
-          onMouseOut={e => e.currentTarget.style.color = '#222'}
-        >
-          Admin Dashboard
-        </a>
+          Log Out
+        </button>
+      ) : (
+        <>
+          <button
+            style={{ ...loginBtnStyle, marginTop: 16, width: 180 }}
+            onClick={() => { setShowLoginModal(true); setMobileOpen(false); }}
+          >
+            Log In
+          </button>
+          <button
+            style={{ ...signupBtnStyle, marginTop: 8, width: 180 }}
+            onClick={() => { setShowSignUpModal(true); setMobileOpen(false); }}
+          >
+            Sign Up
+          </button>
+        </>
+      )}
+    </nav>
+  )}
 
-        {user ? (
-          <div style={{ position: "relative", marginLeft: 40 }} ref={userBtnRef}>
-            <button
-              style={{
-                fontWeight: 700,
-                fontSize: 18,
-                color: "#1976d2",
-                background: showLogout
-                  ? "linear-gradient(90deg, #e3f0ff 0%, #cbe5ff 100%)"
-                  : "linear-gradient(90deg, #fafdff 0%, #e3f0ff 100%)",
-                borderRadius: 16,
-                padding: "12px 32px",
-                border: showLogout ? "2.5px solid #1976d2" : "2px solid #b6c6e3",
-                cursor: "pointer",
-                minWidth: 180,
-                boxShadow: showLogout
-                  ? "0 4px 16px rgba(25,118,210,0.13)"
-                  : "0 2px 8px rgba(80,120,200,0.10)",
-                transition: "border 0.2s, box-shadow 0.2s, background 0.2s",
-                outline: "none",
-                textAlign: "left",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: 240,
-                letterSpacing: 0.5,
-              }}
-              onClick={() => setShowLogout((v) => !v)}
-              onMouseOver={e => {
-                e.currentTarget.style.background = 'linear-gradient(90deg, #cbe5ff 0%, #e3f0ff 100%)';
-                e.currentTarget.style.border = '2.5px solid #1976d2';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(25,118,210,0.13)';
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.background = 'linear-gradient(90deg, #fafdff 0%, #e3f0ff 100%)';
-                e.currentTarget.style.border = '2px solid #b6c6e3';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(80,120,200,0.10)';
-              }}
-            >
-              {user.displayName || user.email}
-            </button>
-            {showLogout && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "110%",
-                  right: 0,
-                  background: "#fff",
-                  border: "1.5px solid #e3e8f0",
-                  borderRadius: 8,
-                  boxShadow: "0 4px 16px rgba(80,120,200,0.13)",
-                  zIndex: 1000,
-                  minWidth: 120,
-                  padding: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "stretch",
-                }}
-              >
-                <button
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#ff1744",
-                    fontWeight: 600,
-                    fontSize: 16,
-                    padding: "12px 0",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    transition: "background 0.2s",
-                  }}
-                  onClick={() => { auth.signOut(); setShowLogout(false); }}
-                >
-                  Log Out
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <>
-            <button
-              style={{ ...loginBtnStyle, marginLeft: 40 }}
-              className="login ml-[20px]"
-              onClick={() => { setShowLoginModal(true); setMobileOpen(false); }}
-            >
-              Log In
-            </button>
-      {showLoginModal && (
-        <ModalLogin onClose={() => setShowLoginModal(false)} onSuccess={() => setShowLoginModal(false)} />
-      )}
-            <button
-              style={{ ...signupBtnStyle, marginLeft: 0 }}
-              onClick={() => { setShowSignUpModal(true); setMobileOpen(false); }}
-            >
-              Sign Up
-            </button>
-      {showSignUpModal && (
-        <ModalSignUp onClose={() => setShowSignUpModal(false)} onSuccess={() => setShowSignUpModal(false)} />
-      )}
-          </>
-        )}
-      </nav>
+  {/* Render modals outside nav for proper overlay */}
+  {showLoginModal && (
+    <ModalLogin onClose={() => setShowLoginModal(false)} onSuccess={() => setShowLoginModal(false)} />
+  )}
+  {showSignUpModal && (
+    <ModalSignUp onClose={() => setShowSignUpModal(false)} onSuccess={() => setShowSignUpModal(false)} />
+  )}
     </header>
   );
 };
