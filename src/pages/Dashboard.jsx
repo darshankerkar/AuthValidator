@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaCertificate, FaCheckCircle, FaExclamationCircle, FaUniversity, FaEye } from "react-icons/fa";
 import { Header } from "../components/Header";
+import Footer from "../components/Footer";
 import { db, auth } from "../firebase/config";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 
@@ -263,6 +264,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -115,8 +115,8 @@ export const Header = () => {
       }}
     >
       <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
-      <span style={{ display: "block", width: 18, height: 2, background: "#1976d2", margin: "4px 0" }} />
-      <span style={{ display: "block", width: 14, height: 2, background: "#1976d2", margin: "4px 0" }} />
+      <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
+      <span style={{ display: "block", width: 22, height: 2, background: "#1976d2", margin: "4px 0" }} />
     </button>
   ) : (
     <button
